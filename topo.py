@@ -36,10 +36,10 @@ def simTest():
     
     net.build()
     print "NET BUILD"
-    #sw1 = net.getNodeByName('s1')
-    #sw2 = net.getNodeByName('s2')
-    #sw1.protocols = 'OpenFlow13'
-    #sw2.protocols = 'OpenFlow13'
+    sw1 = net.getNodeByName('s1')
+    sw2 = net.getNodeByName('s2')
+    sw1.protocols = 'OpenFlow13'
+    sw2.protocols = 'OpenFlow13'
     
     net.getNodeByName('s1').start([ryu_ctl])
     net.getNodeByName('s2').start([ryu_ctl])
