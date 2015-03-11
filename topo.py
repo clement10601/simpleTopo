@@ -10,21 +10,26 @@ formatter = "%r"
 block = "####################"
 #c0 = RemoteController( 'c0', ip='127.0.0.1',port=6633 )
 class dualSH(Topo):
-    def __init__(self,n=2,s=2,**opts):
+    def __init__(self,n=5,s=2,**opts):
         Topo.__init__(self,**opts)
         for sn in range(s):
-            info('*** Adding Switch %s'%(sn+1))
+            info('*** Adding Switch %s\n'%(sn+1))
             switch = self.addSwitch('s%s'%(sn+1))
         
         for hn in range(n):
-            info('*** Adding Host %s'%(hn+1))
+            info('*** Adding Host %s\n'%(hn+1))
             host = self.addHost('h%s' % (hn+1))
-
-        for j in range(1,3):
-            info('*** Adding Links')
-            self.addLink('h%s' % (j), 's%s' % (j))
+	k = 1
+	km = int(n/s)+1
+        for i in range(1,s+1):
+	    for j in range(k,km):
+                self.addLink('h%s' % (j), 's%s' % (i))
+            k=km
+            km=km+int(n/s)
+            if (n%s)!=0:
+                km+=1
         
-        info('Adding Switch Link')
+        info('Adding Switch Link\n')
         self.addLink('s1','s2')
 
 def simTest():
@@ -36,10 +41,8 @@ def simTest():
     
     net.build()
     print "NET BUILD"
-    sw1 = net.getNodeByName('s1')
-    sw2 = net.getNodeByName('s2')
-    sw1.protocols = 'OpenFlow13'
-    sw2.protocols = 'OpenFlow13'
+    net.getNodeByName('s1').protocols = 'OpenFlow13'
+    net.getNodeByName('s2').protocols = 'OpenFlow13'
     
     net.getNodeByName('s1').start([ryu_ctl])
     net.getNodeByName('s2').start([ryu_ctl])
