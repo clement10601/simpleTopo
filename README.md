@@ -47,3 +47,16 @@ RYU Controller need several dependencies
         pip install pip --upgrade
         pip2 install six --upgrade                              six >= 1.9
         
+Usage:
+    
+    Start RYU controller:
+        
+        ryu-manager ryu_apps/simple_switch_13.py
+        
+    Run topo:
+    
+        ./topo.py
+        
+    or
+    
+        python topo.py
