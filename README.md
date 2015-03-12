@@ -36,8 +36,8 @@ RYU Controller need several dependencies
     
         Main:
     
-            python-eventlet python-routes python-webob python-paramiko python-netaddr python-lxml python-oslo-config
-            python-msgpack
+            python-eventlet python-routes python-webob python-paramiko python-netaddr 
+            python-lxml python-oslo-config python-msgpack
             
         Secondary:
         
