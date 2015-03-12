@@ -49,14 +49,14 @@ RYU Controller need several dependencies
         
 Usage:
     
-    Start RYU controller:
+Start RYU controller
         
         ryu-manager ryu_apps/simple_switch_13.py
         
-    Run topo:
+Run topo:
     
         ./topo.py
         
-    or
+or
     
         python topo.py
