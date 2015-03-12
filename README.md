@@ -46,9 +46,9 @@ RYU Controller need several dependencies
             python-pip python-dev python-crypto python-ecdsa python-greenlet python-paramiko python-six
       
         
-USAGE:
+USAGE
     
-    Start RYU controller
+    Start RYU controller:
         
         ryu-manager ryu_apps/simple_switch_13.py
         
