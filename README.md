@@ -10,7 +10,7 @@ Environment:
   
 Attention:
 
-    Latest Openvswitch version 2.3.1 did not support Linux Kernal which version is greater than 3.14
+Latest Openvswitch version 2.3.1 did not support Linux Kernal which version is greater than 3.14
     
     Kernal Downgrade(aptitude installed)
     
@@ -30,7 +30,7 @@ Attention:
         Reboot
         
     
-    RYU Controller need several dependencies
+RYU Controller need several dependencies
         
         apt-get install python-pip
         apt-get install python-dev
