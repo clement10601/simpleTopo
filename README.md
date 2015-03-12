@@ -32,7 +32,7 @@ Latest Openvswitch version 2.3.1 did not support Linux Kernal which version is g
     
 RYU Controller need several dependencies
     Dependencies:
-                                                                Require Version
+    
         apt-get -y install python-pip
         apt-get -y install python-dev
         apt-get -y install python-plxml
