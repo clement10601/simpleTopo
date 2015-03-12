@@ -14,20 +14,20 @@ Latest Openvswitch version 2.3.1 did not support Linux Kernal which version is g
     
     Kernal Downgrade(aptitude installed)
     
-        Search for Packages:
+    Search for Packages:
         
             aptitude search linux-image
             aptitude search linux-headers
         
-        Install Package:
+    Install Package:
             
             aptitude install linux-image-3.13.0-46-generic linux-headers-3.13.0-31-generic
         
-        Remove Kernal:
+    Remove Kernal:
             
             aptitude remove linux-image-3.16.0-XX-generic linux-image-3.16.0-XX-generic
     
-        Reboot
+    Reboot
         
     
 RYU Controller need several dependencies
