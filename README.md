@@ -34,18 +34,14 @@ RYU Controller need several dependencies
 
     Dependencies:
     
-        apt-get -y install python-pip
-        apt-get -y install python-dev
-        apt-get -y install python-plxml
-        apt-get -y install python-crypto
-        apt-get -y install python-eventlet
-        apt-get -y install python-ecdsa
-        apt-get -y install python-greenlet                      greenlet >= 0.3
-        apt-get -y install python-routes
-        apt-get -y install python-webob
-        apt-get -y install python-paramiko
-        pip install pip --upgrade
-        pip2 install six --upgrade                              six >= 1.9
+        Main:
+    
+            python-eventlet python-routes python-webob python-paramiko python-netaddr python-lxml python-oslo-config
+            python-msgpack
+            
+        Secondary:
+        
+            python-pip python-dev python-crypto python-ecdsa python-greenlet python-paramiko python-six
         
 Usage:
     
