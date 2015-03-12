@@ -31,15 +31,17 @@ Latest Openvswitch version 2.3.1 did not support Linux Kernal which version is g
         
     
 RYU Controller need several dependencies
-        
-        apt-get install python-pip
-        apt-get install python-dev
-        apt-get install python-plxml
-        apt-get install python-crypto
-        apt-get install python-eventlet
-        apt-get install python-routes
-        apt-get install python-webob
-        apt-get install python-paramiko
+                                                                Require Version
+        apt-get -y install python-pip
+        apt-get -y install python-dev
+        apt-get -y install python-plxml
+        apt-get -y install python-crypto
+        apt-get -y install python-eventlet
+        apt-get -y install python-ecdsa
+        apt-get -y install python-greenlet                      greenlet >= 0.3
+        apt-get -y install python-routes
+        apt-get -y install python-webob
+        apt-get -y install python-paramiko
         pip install pip --upgrade
-        pip2 install six
+        pip2 install six    --upgrade                           six    >= 1.9
         
