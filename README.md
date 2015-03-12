@@ -44,5 +44,5 @@ RYU Controller need several dependencies
         apt-get -y install python-webob
         apt-get -y install python-paramiko
         pip install pip --upgrade
-        pip2 install six --upgrade                           six    >= 1.9
+        pip2 install six --upgrade                              six >= 1.9
         
