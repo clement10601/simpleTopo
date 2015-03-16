@@ -24,18 +24,22 @@ class L2Switch(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
-        dpid = datapath.id
+        dpid = dp.id
         self.mac_to_port.setdefault(dpid, {})
 
         in_port = msg.match['in_port']
         self.mac_to_port[dpid][src] = in_port
+
         if dst in self.mac_to_port[dpid]:
             out_port = self.mac_to_port[dpid][dst]
         else:
             out_port = ofproto.OFPP_FLOOD
+
         actions = [ofp_parser.OFPActionOutput(out_port)]
+
         data = None
         if msg.buffer_id == ofproto.OFP_NO_BUFFER:
             data = msg.data
+
         out = ofp_parser.OFPPacketOut(datapath=dp,buffer_id=msg.buffer_id,in_port=in_port,actions=actions,data=data)
         dp.send_msg(out)
