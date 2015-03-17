@@ -19,27 +19,35 @@ class L2Switch(app_manager.RyuApp):
         ofp = dp.ofproto
         ofp_parser = dp.ofproto_parser
 
-        pkt = packet.Packet(msg.data)
-        eth = pkt.get_protocols(ethernet.ethernet)[0]
-        dst = eth.dst
-        src = eth.src
+#        pkt = packet.Packet(msg.data)
+#        eth = pkt.get_protocols(ethernet.ethernet)[0]
+#        dst = eth.dst
+#        src = eth.src
 
-        dpid = dp.id
-        self.mac_to_port.setdefault(dpid, {})
+#        dpid = dp.id
+#       self.mac_to_port.setdefault(dpid, {})
 
         in_port = msg.match['in_port']
-        self.mac_to_port[dpid][src] = in_port
+#       self.mac_to_port[dpid][src] = in_port
 
-        if dst in self.mac_to_port[dpid]:
-            out_port = self.mac_to_port[dpid][dst]
+#       if dst in self.mac_to_port[dpid]:
+#        out_port = self.mac_to_port[dpid][dst]
+#       else:
+#           out_port = ofproto.OFPP_FLOOD
+        out_port = 1
+        if in_port==out_port:
+            out_port = 2
         else:
-            out_port = ofproto.OFPP_FLOOD
-
+            out_port = 1
         actions = [ofp_parser.OFPActionOutput(out_port)]
 
         data = None
-        if msg.buffer_id == ofproto.OFP_NO_BUFFER:
+        if msg.buffer_id == ofp.OFP_NO_BUFFER:
             data = msg.data
 
-        out = ofp_parser.OFPPacketOut(datapath=dp,buffer_id=msg.buffer_id,in_port=in_port,actions=actions,data=data)
+        out = ofp_parser.OFPPacketOut(datapath=dp,
+                                      buffer_id=msg.buffer_id,
+                                      in_port=in_port,
+                                      actions=actions,
+                                      data=data)
         dp.send_msg(out)
