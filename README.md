@@ -7,6 +7,10 @@ Environment:
     Mininet 2.2.0
     Ryu Controller 3.19
     Openvswitch 2.0.2
+    
+Protocols:  
+
+    OpenFlow 1.3
   
 Attention:
 
@@ -50,7 +54,7 @@ USAGE
     
     Start RYU controller:
         
-        ryu-manager ryu_apps/simple_switch_13.py
+        ryu-manager ryu_apps/switch_1.py
         
     Run topo:
     
