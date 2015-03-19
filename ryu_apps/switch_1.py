@@ -28,16 +28,29 @@ class L2Switch(app_manager.RyuApp):
         datapath.send_msg(req)
         print("OFPPortDescStatsRequest")
 
-    def add_flow(self, datapath, in_port, instructions):
+    def add_flow(self, datapath, in_port,eth_dst, instructions):
+
         ofproto = datapath.ofproto
         ofp_parser = datapath.ofproto_parser
-        match = ofp_parser.OFPMatch(in_port)
-        flow = ofp_parser.OFPFlowMod(datapath=datapath,
-                                 match=match,
-                                 cookie=0,
-                                 command=ofproto.OFPFC_ADD,
+        match = ofp_parser.OFPMatch(in_port=in_port)
+        cookie = cookie_mask = 0
+        table_id = 0
+        idle_timeout = hard_timeout = 0
+        priority = 32768
+        buffer_id = ofproto.OFP_NO_BUFFER
+
+        flow = ofp_parser.OFPFlowMod(datapath,
+                                 cookie,cookie_mask,
+                                 table_id,ofproto.OFPFC_ADD,
+                                 idle_timeout,hard_timeout,
+                                 priority,buffer_id,
+                                 ofproto.OFPP_ANY,ofproto.OFPG_ANY,
+                                 ofproto.OFPFF_SEND_FLOW_REM,
+                                 match,
                                  instructions=instructions)
-        datapath.send_msg(flow)
+        print(flow)
+        ini = datapath.send_msg(flow)
+        print(ini)
 
     @set_ev_cls(ofp_event.EventOFPPortDescStatsReply, MAIN_DISPATCHER)
     def port_desc_stats_reply_handler(self, ev):
@@ -46,12 +59,20 @@ class L2Switch(app_manager.RyuApp):
         ofp = datapath.ofproto
         ofp_parser = datapath.ofproto_parser
         ports = []
+        macs =[]
         for p in ev.msg.body:
             if p.port_no < 100:
                 ports.append("%d" % (p.port_no))
-        action = [datapath.ofproto_parser.OFPActionOutput(int(ports[1]))]
+                macs.append("%s" % (p.hw_addr))
+        print(ports)
+        action = [datapath.ofproto_parser.OFPActionOutput(int(ports[1],0))]
         instructions = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,action)]
-        self.add_flow(datapath,int(ports[0]),instructions)
-        action = [datapath.ofproto_parser.OFPActionOutput(int(ports[0]))]
+        print(action)
+        print(instructions)
+        self.add_flow(datapath,int(ports[0]),macs[0],instructions)
+
+        action = [datapath.ofproto_parser.OFPActionOutput(int(ports[0],0))]
         instructions = [ofp_parser.OFPInstructionActions(ofp.OFPIT_APPLY_ACTIONS,action)]
-        self.add_flow(datapath,int(ports[1]),instructions)
+        print(action)
+        print(instructions)
+        self.add_flow(datapath,int(ports[1]),macs[1],instructions)
