@@ -96,7 +96,6 @@ def FatTree():
     for n in range(0,len(eg_switch),2):
         eg_switch[n].start([ct[0]])
         eg_switch[n+1].start([ct[1]])
-    net.start()
     print "Dumping host connections"
     dumpNodeConnections(net.hosts)
     print "Testing network connectivity"
