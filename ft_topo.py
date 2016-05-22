@@ -8,6 +8,7 @@ from mininet.log import setLogLevel, info
 import os, time
 onos1 = "10.0.3.86"
 onos2 = "10.0.3.87"
+onos3 = "10.0.3.88"
 
 def FatTree():
     """
@@ -23,6 +24,7 @@ def FatTree():
     crtl = []
     crtl.append(RemoteController('c0', ip=onos1, port=6653))
     crtl.append(RemoteController('c1', ip=onos2, port=6653))
+    crtl.append(RemoteController('c2', ip=onos3, port=6653))
     coreswitches = 4
     pods = 4
     ag_switches = 2
@@ -73,22 +75,24 @@ def FatTree():
     def addLink(coreswitches,pods,ag_switches,eg_switches,hpe):
         info('Adding Switch Links\n')
         #core to ag
-        for n in range(0,ag_switches*pods,2):
-	    for m in range(0,coreswitches,2):
-        	info('Link: Core:%s AG:%s\n'%(coreswitch[m].name,ag_switch[n].name))
-	        net.addLink(coreswitch[m].name,ag_switch[n].name)
-        	info('Link: Core:%s AG:%s\n'%(coreswitch[m+1].name,ag_switch[n+1].name))
-	        net.addLink(coreswitch[m+1].name,ag_switch[n+1].name)
+        totalAG = ag_switches*pods
+        for m in range(coreswitches):
+            l = m % ag_switches
+            for n in range(pods):
+                j = n*ag_switches + l
+                info('Link: Core: %s to Pod: %s switch: %s\n'%(m,n,j))
+                net.addLink(coreswitch[m],ag_switch[j])
         #ag to eg
-	for n in range(0,ag_switches*pods,2):
-	    for m in range(n,n+eg_switches):
-        	info('Link: AG:%s EG:%s\n'%(ag_switch[n].name,eg_switch[m].name))
-		net.addLink(ag_switch[n].name,eg_switch[m].name)
-        	info('Link: AG:%s EG:%s\n'%(ag_switch[n+1].name,eg_switch[m].name))
-		net.addLink(ag_switch[n+1].name,eg_switch[m].name)
+        for m in range(pods):
+            i = m * ag_switches
+            j = m * eg_switches
+            for n in range(i,i+ag_switches):
+		for l in range(j,j+eg_switches):
+            	    info('Link: AG:%s EG:%s\n'%(ag_switch[n],eg_switch[l]))
+                    net.addLink(ag_switch[n].name,eg_switch[l])
         #eg to host
-	for n in range(0,eg_switches*pods*hpe,hpe):
-            for m in range(n,n+hpe):
+	for n in range(0,eg_switches*pods,1):
+            for m in range(n*hpe,(n*hpe)+hpe):
         	info('Link: EG:%s Host:%s\n'%(eg_switch[n].name,host[m].name))
 	    	net.addLink(eg_switch[n].name,host[m].name)
 
@@ -103,24 +107,31 @@ def FatTree():
     info('Connect to controller\n')
     info('ON1: %s\n'%onos1)
     info('ON2: %s\n'%onos2)
+    info('ON3: %s\n'%onos3)
     ct.append(net.addController('c0',controller=RemoteController,ip=onos1, port=6653))
     ct.append(net.addController('c1',controller=RemoteController,ip=onos2, port=6653))
-    res = net.build()
-    time.sleep(5)
-    for n in range(0,len(coreswitch),2):
-  	coreswitch[n].start([ct[0]])
-	coreswitch[n+1].start([ct[1]])
-    for n in range(0,len(ag_switch),2):
-	ag_switch[n].start([ct[0]])
-	ag_switch[n+1].start([ct[1]])
-    for n in range(0,len(eg_switch),2):
-        eg_switch[n].start([ct[0]])
-        eg_switch[n+1].start([ct[1]])
-    print "Dumping host connections"
+    ct.append(net.addController('c2',controller=RemoteController,ip=onos3, port=6653))
+    info('Building Network\n')
+    net.build()
+    time.sleep(1)
+    for n in range(len(eg_switch)):
+        eg_switch[n].start([ct[n%3]])
+    info('eg switches started\n')
+    time.sleep(2)
+    for n in range(len(coreswitch)):
+  	coreswitch[n].start([ct[n%3]])
+    info('core switches started\n')
+    time.sleep(2)
+    for n in range(len(ag_switch)):
+	ag_switch[n].start([ct[n%3]])
+    info('ag switches started\n')
+    time.sleep(2)
+    info('Dumping host connections\n')
     dumpNodeConnections(net.hosts)
-    print "Testing network connectivity"
-    #net.pingAll()
-    print "network CLI"
+    time.sleep(2)
+    info("Testing network connectivity\n")
+    net.pingAll()
+    time.sleep(2)
     CLI(net)
     net.stop()
 
