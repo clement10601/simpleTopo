@@ -51,6 +51,7 @@ def simTest():
                 net.addLink('sc%s%s'%(a,cc+1), 'sc%s%s'%(a+1,cc+1)) 
     addNetFunc(switches,hosts,controllers)
     net.addLink('sc11','sc12')
+    net.addLink('sc21','sc22')
     net.build()
     net.build()
     switch[0].start([ct0]) 
